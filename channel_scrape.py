@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
 # Importing the dependencies
-import pandas as pd
 from apiclient.discovery import build
 
 
 # channel class consists of functions to retrieve data about a youtube channel
 class channel():
+    """
+    This module scrapes the a YouTube channel for playlists associated with it.
+    """
 
     def __init__(self, api_key, channelId):
         self.channelId = channelId
@@ -15,6 +17,12 @@ class channel():
         self.nextPageToken = ''
 
     def scrape(self):
+        """
+        scrape function starts scraping a channel for its playlists, calls other 
+        functions to checks for multiple pages, and returns a list of playlistId 
+        for all the playlist of the channel.
+        """
+
         request = self.youtube.playlists().list(
             part="id,snippet",
             channelId=self.channelId,
@@ -27,11 +35,15 @@ class channel():
             self.nextPageToken = response['nextPageToken']
 
         while self.nextPageToken:
-            nextPage(self.nextPageToken)
+            self.nextPage(self.nextPageToken)
 
         return self.playlists
 
     def nextPage(self):
+        """
+        nextPage() method scrapes multiple pages of Channel data for playlists.
+        """
+
         request = self.youtube.playlists().list(part="id,snippet", channelId=self.channelId,
                                                 maxResults=50, pageToken=self.nextPageToken)
         response = request.execute()
@@ -43,5 +55,10 @@ class channel():
             self.nextPageToken = ''
 
     def pageScrape(self, items):
+        """
+        pageScrape() method scrapes for playlistIds one page at a time and add 
+        them to the list self.playlists.
+        """
+
         for item in items:
             self.playlists.append(item['id'])
