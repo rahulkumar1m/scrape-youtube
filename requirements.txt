@@ -1,0 +1,6 @@
+google-api-python-client
+
+API_KEY = AIzaSyDfxI7qFQtxipjxkj1V9dJd3o7VfhnUOaU
+
+BB ki Vines
+ChannelID = UCqwUrj10mAEsqezcItqvwEw
