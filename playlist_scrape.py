@@ -3,7 +3,8 @@ import pandas as pd
 from apiclient.discovery import build
 
 
-# playlist class consisting of all the functions involved in extracting data on videos in a playlist
+# playlist class consisting of all the functions involved in extracting data
+# on videos in a playlist
 class playlist():
     # Each scrape needs api_key and playlist_id from the user
     def __init__(self, api_key, playlist_id):
@@ -26,11 +27,13 @@ class playlist():
 
     def scrape(self):
         """
-        `scrape` method starts scraping list of all the videos in a playlist and store it in `items` list.
-        It then calls `pageScrape` function by passing items to it which scrape `statistics` and `snippets`.
-        If there is more than one page of playlist, it calls `nextPage` to scrape videos from there too.
-        This method doesn't accept any paramets except for `self`.
-        It returns a `pandas.DataFrame` object containing all the desired data about all the videos in the playlist.
+        `scrape` method starts scraping list of all the videos in a playlist and 
+        store it in `items` list. It then calls `pageScrape` function by passing
+        items to it which scrape `statistics` and `snippets`. If there is more than
+        one page of playlist, it calls `nextPage` to scrape videos from there too.
+        This method doesn't accept any paramets except for `self`. It returns a 
+        `pandas.DataFrame` object containing all the desired data about all the 
+        videos in the playlist.
         """
         res = self.youtube.playlistitems().list(playlistId=self.playlist_id,
                                                 part='snippet,id', maxResults=50).execute()
@@ -45,17 +48,20 @@ class playlist():
         while self.nextPageToken:
             self.nextPage()
 
-        youtube_dict = {'tags': self.tags, 'channelId': self.channelId, 'channelTitle': self.channelTitle,
-                        'categoryId': self.categoryId, 'title': self.title, 'videoId': self.videoId,
-                        'viewCount': self.viewCount, 'likeCount': self.likeCount, 'dislikeCount': self.dislikeCount,
-                        'commentCount': self.commentCount, 'favoriteCount': self.favoriteCount}
+        youtube_dict = {'tags': self.tags, 'channelId': self.channelId,
+                        'channelTitle': self.channelTitle, 'categoryId': self.categoryId,
+                        'title': self.title, 'videoId': self.videoId,
+                        'viewCount': self.viewCount, 'likeCount': self.likeCount,
+                        'dislikeCount': self.dislikeCount, 'commentCount': self.commentCount,
+                        'favoriteCount': self.favoriteCount}
+
         return pd.DataFrame(youtube_dict)
 
     def nextPage(self):
         """
-        `nextPage` scrapes the list of videos on present page and checks if next pages exist 
-        and store the `nextPageToken` to a variable for next use. 
-        It doesn't accept any parameter and doesn't return anything.
+        `nextPage` scrapes the list of videos on present page and checks if next
+        pages exist and store the `nextPageToken` to a variable for next use. It does 
+        not accept any parameter and doesn't return anything.
         """
         page = self.youtube.playlistitems().list(playlistId=self.playlist_id, part='snippet,id',
                                                  maxResults=50, pageToken=self.nextPageToken).execute()
@@ -70,8 +76,9 @@ class playlist():
 
     def pageScrape(self, items):
         """
-        `pageScrape` method accepts `items` list as parameter containing the videos whose data needs to be scraped.
-        It scrapes the `statistics and `snippets` of a video and stores them in desired variables as declared in __init__.
+        `pageScrape` method accepts `items` list as parameter containing the videos
+        whose data needs to be scraped. It scrapes the `statistics and `snippets` of
+        a video and stores them in desired variables as declared in __init__.
         """
         statss = []
         for data in items:
@@ -83,7 +90,8 @@ class playlist():
             statss.append(stats)
 
         for count in range(len(items)):
-            # if a given video is private it's count items variable is empty therfore length zero so we skip that video
+            # if a given video is private it's count items variable is empty therfore
+            #  length zero so we skip that video
             if(len(statss[count]['items']) != 0):
 
                 self.title.append(items[count]['snippet']['title'])
