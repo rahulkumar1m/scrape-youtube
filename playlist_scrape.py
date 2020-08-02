@@ -7,9 +7,7 @@ from apiclient.discovery import build
 class playlist():
     # Each scrape needs api_key and playlist_id from the user
     def __init__(self, api_key, playlist_id):
-        self.api_key = api_key
         self.playlist_id = playlist_id
-
         self.youtube = build('youtube', 'v3', developerKey=api_key)
         self.title = []
         self.channelId = []
