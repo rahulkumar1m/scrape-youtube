@@ -1,17 +1,6 @@
 # Importing the dependencies
-import subprocess
-import sys
 import pandas as pd
-
-
-# function to instal the google-api-client and importing build from it
-def install(package):
-    subprocess.check_call([sys.executable, "-m", "pip",
-                           "install", 'google-api-python-client'])
-
-
-# Calling the install function on google-api-python-client to install
-install('google-api-python-client')
+from apiclient.discovery import build
 
 
 # playlist class consisting of all the functions involved in extracting data on videos in a playlist
@@ -20,7 +9,7 @@ class playlist():
     def __init__(self, api_key, playlist_id):
         self.api_key = api_key
         self.playlist_id = playlist_id
-        from apiclient.discovery import build
+
         self.youtube = build('youtube', 'v3', developerKey=api_key)
         self.title = []
         self.channelId = []
