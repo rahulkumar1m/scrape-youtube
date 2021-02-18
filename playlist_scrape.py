@@ -35,15 +35,15 @@ class playlist():
         `pandas.DataFrame` object containing all the desired data about all the 
         videos in the playlist.
         """
-        res = self.youtube.playlistitems().list(playlistId=self.playlist_id,
-                                                part='snippet,id', maxResults=50).execute()
+        response = self.youtube.playlistitems().list(playlistId=self.playlist_id,
+                                                part='snippet,id', maxresponseults=50).execute()
 
-        items = res['items']
+        items = response['items']
 
         self.pageScrape(items)
 
-        if 'nextPageToken' in res:
-            self.nextPageToken = res['nextPageToken']
+        if 'nextPageToken' in response:
+            self.nextPageToken = response['nextPageToken']
 
         while self.nextPageToken:
             self.nextPage()
