@@ -18,8 +18,8 @@ class channel():
 
     def scrape(self):
         """
-        scrape function starts scraping a channel for its playlists, calls other 
-        functions to checks for multiple pages, and returns a list of playlistId 
+        scrape function starts scraping a channel for its playlists,
+        checks for multiple pages, and returns a list of playlistId 
         for all the playlist of the channel.
         """
 
@@ -36,22 +36,15 @@ class channel():
             self.nextPageToken = response['nextPageToken']
 
         while self.nextPageToken:
-            self.nextPage(self.nextPageToken)
+            request = self.youtube.playlists().list(part="id,snippet", channelId=self.channelId,
+                                                maxResults=50, pageToken=self.nextPageToken)
+            response = request.execute()
+            for item in items:
+                self.playlists.append(item['id'])
+
+            if 'nextPageToken' in response:
+                self.nextPageToken = response['nextPageToken']
+            else:
+                self.nextPageToken = ''
 
         return self.playlists
-
-    def nextPage(self):
-        """
-        nextPage() method scrapes multiple pages of Channel data for playlists.
-        """
-
-        request = self.youtube.playlists().list(part="id,snippet", channelId=self.channelId,
-                                                maxResults=50, pageToken=self.nextPageToken)
-        response = request.execute()
-        for item in items:
-            self.playlists.append(item['id'])
-
-        if 'nextPageToken' in response:
-            self.nextPageToken = response['nextPageToken']
-        else:
-            self.nextPageToken = ''
