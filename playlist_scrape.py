@@ -35,8 +35,8 @@ class playlist():
         `pandas.DataFrame` object containing all the desired data about all the 
         videos in the playlist.
         """
-        response = self.youtube.playlistitems().list(playlistId=self.playlist_id,
-                                                part='snippet,id', maxresponseults=50).execute()
+        response = self.youtube.playlistItems().list(playlistId=self.playlist_id,
+                                                part='snippet,id', maxResults=50).execute()
 
         items = response['items']
 
@@ -63,7 +63,7 @@ class playlist():
         pages exist and store the `nextPageToken` to a variable for next use. It does 
         not accept any parameter and doesn't return anything.
         """
-        page = self.youtube.playlistitems().list(playlistId=self.playlist_id, part='snippet,id',
+        page = self.youtube.playlistItems().list(playlistId=self.playlist_id, part='snippet,id',
                                                  maxResults=50, pageToken=self.nextPageToken).execute()
 
         items = page['items']
